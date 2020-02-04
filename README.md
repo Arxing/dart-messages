@@ -5,10 +5,13 @@
 
 ## Install
 
+### For Dart or Flutter
 ```yaml
-messages_dart:
-  git: 
-    url: https://github.com/Arxing/dart-messages.git
+messages_dart: any
+```
+### Flutter Only
+```yaml
+messages_flutter: any
 ```
 
 ## Messages
@@ -257,3 +260,54 @@ void main(){
 ```dart
 var msg = RoutingMessages(100, 5000).showMessage;
 ```
+
+### Extensions
+
+#### Getting as RoutingMessages
+
+```dart
+void main(){
+  // list extension for routing
+  RoutingMessages routingMessages = [100, 5000].toRoutingMessages();
+}
+```
+#### Routing Message
+
+```dart
+void main(){
+  var message = [100, 5000].routingMessage;
+  message = ["login", "buttons", "accountHint"].routingMessage;
+}
+```
+
+#### Error Handler
+```dart
+void main(){
+  Future.sync(() {
+    throw 100;
+  }).catchErrorDefault().then((_) {
+    throw [100, 5000].toRoutingMessages();
+  }).catchErrorDefault();
+}
+```
+
+## Flutter Only Functions
+
+### Show Toast
+
+```dart
+void main() {
+  showToast("Hello World");
+  showToastMessagesString("Hello World");
+  showToastMessagesError("An Error");
+  showToastMessagingRouting(100, 5000);
+  
+  // messages extension
+  Messages messages = StringMessages("Hello World");
+  messages.showToast();
+  
+  // list extension for routing
+  [100, 5000].showToast();  
+}
+```
+

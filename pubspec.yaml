@@ -1,0 +1,14 @@
+name: messages_dart
+description: |
+  An easy way to dispatch message.
+version: 1.0.0
+homepage: https://github.com/Arxing/dart-messages
+author: Arxing <meiswind711108@gmail.com>
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  xson: ^1.0.4
+
+#dev_dependencies:

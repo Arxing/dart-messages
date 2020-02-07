@@ -6,12 +6,12 @@ abstract class Messages {
 
   String get debugMessage;
 
-  String get showMessage;
+  String get message;
 
   @override
   String toString() {
     var map = {
-      'showMessage': showMessage,
+      'showMessage': message,
     };
     if (debugMessage != null) map['debug'] = debugMessage;
     if (extras != null) map['extras'] = extras;
@@ -21,9 +21,9 @@ abstract class Messages {
 
 class StringMessages extends Messages {
   final String debugMessage;
-  final String showMessage;
+  final String message;
 
-  StringMessages(this.showMessage, [this.debugMessage]);
+  StringMessages(this.message, [this.debugMessage]);
 }
 
 class ErrorMessages extends Messages {
@@ -32,7 +32,7 @@ class ErrorMessages extends Messages {
 
   ErrorMessages.of(this.errorMessage, [this.stackTrace]);
 
-  String get showMessage => errorMessage;
+  String get message => errorMessage;
 
   String get debugMessage => "ERROR:$errorMessage\nSTACK_TRACE:$stackTrace";
 }
@@ -68,7 +68,7 @@ class RoutingMessages extends Messages {
           ].where((route) => route != null).toList(),
         );
 
-  String get showMessage {
+  String get message {
     var mapper = MessagesMapper.getInstance();
     if (mapper.isLoaded) {
       var key = routes.join(".");

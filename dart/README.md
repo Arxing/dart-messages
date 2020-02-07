@@ -1,18 +1,23 @@
 # Messages
 
 ![](https://img.shields.io/badge/language-dart-orange.svg)
-![](https://img.shields.io/badge/latest-1.0.0-green.svg)
 
 ## Install
 
+### For Dart or Flutter
 ```yaml
-messages_dart:
-  git: 
-    url: https://github.com/Arxing/dart-messages.git
+messages_dart: any
+```
+### Flutter Only
+```yaml
+messages_flutter: any
 ```
 
-## Messages
+## MessagesPlugin
 
+All functions is in `MessagesPlugin`.
+
+## Messages
 `Messages` has 3 implementation:
 
 + StringMessages - Pure text messages.
@@ -59,7 +64,7 @@ Messages Resource file supports any formats which can parse by json like json, y
 
 | key | description |
 | --- | --- |
-| message | Show message |
+| message | display message |
 | remark | Remark message |
 | routes | Children routes |
 
@@ -167,10 +172,10 @@ void main(){
   File resource = File("filepath");
   String json = resource.readAsStringSync();
   
-  MessagesMapper.getInstance().loadAsString(json);
+  MessagesPlugin.loadAsString(json);
   // or
   JsonElement jsonElement = JsonElement.fromJsonString(json);
-  MessagesMapper.getInstance().load(jsonElement);
+  MessagesPlugin.load(jsonElement);
 }
 ```
 
@@ -193,10 +198,10 @@ void main(){
   var doc = yaml.loadYaml(content);
   String json = json.encode(doc);
   
-  MessagesMapper.getInstance().loadAsString(json);
+  MessagesPlugin.loadAsString(json);
   // or
   JsonElement jsonElement = JsonElement.fromJsonString(json);
-  MessagesMapper.getInstance().load(jsonElement);
+  MessagesPlugin.load(jsonElement);
 }
 ```
 
@@ -220,10 +225,10 @@ void main(){
   xml2Json.parse(content);
   String json = json.encode(xml2Json.toGData());
   
-  MessagesMapper.getInstance().loadAsString(json);
+  MessagesPlugin.loadAsString(json);
   // or
   JsonElement jsonElement = JsonElement.fromJsonString(json);
-  MessagesMapper.getInstance().load(jsonElement);
+  MessagesPlugin.load(jsonElement);
 }
 ```
 
@@ -231,12 +236,12 @@ void main(){
 
 ```dart
 void main(){
-  MessagesMapper.getInstance().loadAsString(jsonEncode(msg));
+  MessagesPlugin.loadAsString(jsonEncode(msg));
 
-  setDefaultMessagesHandler((Messages messages) {
-    print("Custom Handle message: ${messages.showMessage}");
+  MessagesPlugin.setErrorHandler((Messages messages) {
+    print("Custom Handle message: ${messages.message}");
   });
-  setDefaultMessagesTransformer((error, [stack]) {
+  MessagesPlugin.setErrorTransformer((error, [stack]) {
     if (error is int) return StringMessages("int: $error");
     return StringMessages(error?.toString());
   });
@@ -244,16 +249,64 @@ void main(){
   Future.sync(() {
     // do something
     throw RoutingMessages.of(100, 5000);
-  }).catchError(defaultErrorHandler).then((_) {
+  }).catchError(MessagesPlugin.errorHandler).then((_) {
     throw 100;
-  }).catchError(defaultErrorHandler).then((_){
+  }).catchError(MessagesPlugin.errorHandler).then((_){
     throw "An Error~";
-  }).catchError(defaultErrorHandler);
+  }).catchError(MessagesPlugin.errorHandler);
 }
 ```
 
 ### Get Message from Routing
 
 ```dart
-var msg = RoutingMessages(100, 5000).showMessage;
+var msg = RoutingMessages(100, 5000).message;
+```
+
+### Extensions
+
+#### Getting as RoutingMessages
+
+```dart
+void main(){
+  // list extension for routing
+  RoutingMessages routingMessages = [100, 5000].toRoutingMessages();
+}
+```
+#### Routing Message
+
+```dart
+void main(){
+  var message = [100, 5000].routingMessage;
+  message = ["login", "buttons", "accountHint"].routingMessage;
+}
+```
+
+#### Error Handler
+```dart
+void main(){
+  Future.sync(() {
+    throw 100;
+  }).catchErrorDefault().then((_) {
+    throw [100, 5000].toRoutingMessages();
+  }).catchErrorDefault();
+}
+```
+
+#### Display
+
+```dart
+void main() {
+  MessagesPlugin.display("Hello World");
+  MessagesPlugin.displayString("Hello World");
+  MessagesPlugin.displayError("An Error");
+  MessagesPlugin.displayRouting(100, 5000);
+  
+  // messages extension
+  Messages messages = StringMessages("Hello World");
+  messages.display();
+  
+  // list extension for routing
+  [100, 5000].display();  
+}
 ```

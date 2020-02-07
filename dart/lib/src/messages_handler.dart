@@ -1,4 +1,4 @@
-import 'package:messages_dart/messages_dart.dart';
+part of 'messages_plugin.dart';
 
 typedef ErrorHandler = void Function(dynamic, [StackTrace]);
 
@@ -15,7 +15,7 @@ MessagesHandler _defaultMessagesHandler = (messages) {
 
 MessagesTransformer _defaultMessagesTransformer = (e, [stack]) => ErrorMessages.of(e?.toString(), stack);
 
-ErrorHandler get defaultErrorHandler => (e, [stack]) {
+ErrorHandler get _defaultErrorHandler => (e, [stack]) {
       Messages messages;
       if (e is Messages) {
         messages = e;
@@ -27,6 +27,6 @@ ErrorHandler get defaultErrorHandler => (e, [stack]) {
       if (_defaultMessagesHandler != null) _defaultMessagesHandler(messages);
     };
 
-void setDefaultMessagesHandler(MessagesHandler handler) => _defaultMessagesHandler = handler;
+void _setErrorHandler(MessagesHandler handler) => _defaultMessagesHandler = handler;
 
-void setDefaultMessagesTransformer(MessagesTransformer transformer) => _defaultMessagesTransformer = transformer;
+void _setErrorTransformer(MessagesTransformer transformer) => _defaultMessagesTransformer = transformer;
